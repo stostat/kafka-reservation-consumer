@@ -13,7 +13,7 @@ public class MongoClientConnection {
 
     @Bean
     public MongoClient mongoClient() {
-        String connectionData = "mongodb://root:example@localhost:27017/testDb?authSource=admin&directConnection=true";
+        String connectionData = "mongodb://localhost:27017/testDb?authSource=admin&directConnection=true";
         return MongoClients.create(connectionData);
     }
 
