@@ -41,14 +41,6 @@ public class VenueCapacityService {
         log.info("Capacity document initialised — totalSeats: {}", TOTAL_SEATS);
     }
 
-    // ── Reserve ───────────────────────────────────────────────────────────────
-
-    /**
-     * Atomically increments reserved by partySize and decrements available.
-     * Returns the updated document, or null if not enough seats are left.
-     *
-     * Uses findAndModify so the check + update happen in a single atomic operation.
-     */
     public boolean reserveSeats(int partySize) {
         UpdateResult r = mongoTemplate.updateFirst(
                 query(where("available").gte(partySize)),
@@ -57,11 +49,6 @@ public class VenueCapacityService {
         return r.getModifiedCount() > 0;
     }
 
-    // ── Cancel / Release ──────────────────────────────────────────────────────
-
-    /**
-     * Releases seats back to available when a booking is cancelled.
-     */
     public void releaseSeats(int partySize) {
         mongoTemplate.updateFirst(
                 query(where("id").is(CAPACITY_ID)),
@@ -69,20 +56,12 @@ public class VenueCapacityService {
                 VenueCapacityDocument.class);
     }
 
-    // ── Read ──────────────────────────────────────────────────────────────────
-
-    /**
-     * Returns the current capacity state without modifying anything.
-     */
     public VenueCapacityDocument getCapacity() {
         return capacityRepository.findById(CAPACITY_ID)
                 .orElseThrow(() -> new IllegalStateException(
                         "Capacity document not found — call initCapacity() first"));
     }
 
-    /**
-     * Returns true if the requested party size can be accommodated.
-     */
     public boolean hasAvailability(int partySize) {
         VenueCapacityDocument cap = getCapacity();
         return cap.getAvailable() >= partySize;
