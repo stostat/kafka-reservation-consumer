@@ -1,0 +1,49 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.estudios'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-kafka'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	// ─── Test dependencies ────────────────────────────────────────────────────
+	// Spring Boot 4 test starter (JUnit 5, AssertJ, Mockito, Spring Test)
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// MongoDB-specific test slice (@DataMongoTest)
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb-test'
+
+	// Kafka-specific test utilities (EmbeddedKafkaBroker, etc.)
+	testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+
+	// MVC slice (@WebMvcTest, MockMvc)
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
